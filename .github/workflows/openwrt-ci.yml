@@ -11,10 +11,10 @@ name: OpenWrt-CI
 
 on:
   push:
-    branches: 
-      - master
-  # schedule:
-  #   - cron: 0 20 * * *
+  #  branches: 
+  #    - master
+   schedule:
+     - cron: 20 0 * * *
   release:
     types: [published]
 
@@ -33,7 +33,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: master
+          ref: xiaomi_r3g_v21.02
 
       - name: Space cleanup
         env:
@@ -83,6 +83,7 @@ jobs:
           # 
 
           sed -i 's/^[ \t]*//g' ./.config
+          cp .config_xiaomi_r3g .config
           make defconfig
 
       - name: Make download
