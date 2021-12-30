@@ -2,9 +2,8 @@ src-git packages https://github.com/DrWindays/packages.git;openwrt-21.02
 src-git luci https://github.com/DrWindays/luci.git;openwrt-21.02
 src-git routing https://git.openwrt.org/feed/routing.git;openwrt-21.02
 src-git telephony https://git.openwrt.org/feed/telephony.git;openwrt-21.02
+src-git plugins https://github.com/DrWindays/plugins_package.git
 src-git small8 https://github.com/kenzok8/small-package
-#src-git vlmcsd/luci-app-vlmcsd https://github.com/mchome/luci-app-vlmcsd.git
-#src-git vlmcsd/openwrt-vlmcsd https://github.com/mchome/openwrt-vlmcsd.git
 #src-git video https://github.com/openwrt/video.git;openwrt-21.02
 #src-git targets https://github.com/openwrt/targets.git
 #src-git oldpackages http://git.openwrt.org/packages.git
