@@ -100,6 +100,7 @@ include $(SUBTARGET).mk
 ifeq ($(SUBTARGET),generic)
 include generic-tp-link.mk
 include generic-ubnt.mk
+include generic-fast.mk
 endif
 
 ifeq ($(SUBTARGET),tiny)
