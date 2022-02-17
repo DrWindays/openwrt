@@ -11,7 +11,7 @@
     model = "TP-Link TL-WR886N v2";
 
 	chosen {
-		bootargs = "console=ttyS0,115200n8";
+		bootargs = "console=ttyS0,115200n8 root=/dev/mtdblock3 rootfstype=squashfs rw";
 	};
 
     aliases {
