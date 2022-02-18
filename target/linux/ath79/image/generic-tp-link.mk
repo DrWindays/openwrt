@@ -1,5 +1,15 @@
 include ./common-tp-link.mk
 
+define Device/tplink_tl-wr886n-v6
+  $(Device/tplink-16mlzma)
+  SOC := tp9345
+  DEVICE_MODEL := TL-WR886N
+  DEVICE_VARIANT := v6
+  TPLINK_HWID := 0x08860002
+  SUPPORTED_DEVICES += tl-wr886n-v6
+endef
+TARGET_DEVICES += tplink_tl-wr886n-v6
+
 define Device/tplink_tl-wr886n-v2
   $(Device/tplink-8mlzma)
   SOC := tp9343

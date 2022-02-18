@@ -167,6 +167,7 @@ ath79_setup_interfaces()
 	tplink,tl-wr842n-v1|\
 	tplink,tl-wr842n-v3|\
 	tplink,tl-wr886n-v2|\
+	tplink,tl-wr886n-v6|\
 	ubnt,airrouter)
 		ucidef_set_interface_wan "eth1"
 		ucidef_add_switch "switch0" \
