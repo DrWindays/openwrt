@@ -1,0 +1,84 @@
+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+
+#include "ar9344_tplink_tl-wdrxxxx.dtsi"
+
+/ {
+	model = "TP-Link TL-WDR6300 v2_3";
+	compatible = "tplink,tl-wdr6300-v2_3", "qca,ar9344";
+
+	aliases {
+		label-mac-device = &ath9k;
+	};
+};
+
+&leds {
+    lan1 {
+        label = "green:lan1";
+        gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
+    };
+    wan {
+        label = "green:wan";
+        gpios = <&gpio 11 GPIO_ACTIVE_LOW>;
+    };
+    /delete-node/ qss;
+};
+
+//&ath9k-leds{
+//    wlan5g {
+//        gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
+//    };
+//};
+&ath9k {
+	nvmem-cells = <&macaddr_uboot_1fc00>;
+	nvmem-cell-names = "mac-address";
+};
+
+&wmac {
+	nvmem-cells = <&macaddr_uboot_1fc00>;
+	nvmem-cell-names = "mac-address";
+	mac-address-increment = <(-1)>;
+};
+
+&mdio0 {
+	status = "okay";
+
+	phy-mask = <0>;
+
+	phy0: ethernet-phy@0 {
+		reg = <0>;
+		phy-mode = "rgmii";
+
+		qca,ar8327-initvals = <
+			0x04 0x07600000 /* PORT0 PAD MODE CTRL */
+			0x10 0x80000080 /* POWER_ON_STRAP */
+			0x50 0xc737c737 /* LED_CTRL0 */
+			0x54 0x00000000 /* LED_CTRL1 */
+			0x58 0x00000000 /* LED_CTRL2 */
+			0x5c 0x0030c300 /* LED_CTRL3 */
+			0x7c 0x0000007e /* PORT0_STATUS */
+			>;
+	};
+};
+
+&eth0 {
+	status = "okay";
+
+	/* default for ar934x, except for 1000M */
+	pll-data = <0x06000000 0x00000101 0x00001616>;
+
+	nvmem-cells = <&macaddr_uboot_1fc00>;
+	nvmem-cell-names = "mac-address";
+
+	phy-mode = "rgmii";
+	phy-handle = <&phy0>;
+};
+
+&uboot {
+	compatible = "nvmem-cells";
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	macaddr_uboot_1fc00: macaddr@1fc00 {
+		reg = <0x1fc00 0x6>;
+	};
+};
