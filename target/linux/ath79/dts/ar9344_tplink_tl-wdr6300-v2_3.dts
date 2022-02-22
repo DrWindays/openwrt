@@ -41,36 +41,18 @@
 
 &mdio0 {
 	status = "okay";
-
-	phy-mask = <0>;
-
-	phy0: ethernet-phy@0 {
-		reg = <0>;
-		phy-mode = "rgmii";
-
-		qca,ar8327-initvals = <
-			0x04 0x07600000 /* PORT0 PAD MODE CTRL */
-			0x10 0x80000080 /* POWER_ON_STRAP */
-			0x50 0xc737c737 /* LED_CTRL0 */
-			0x54 0x00000000 /* LED_CTRL1 */
-			0x58 0x00000000 /* LED_CTRL2 */
-			0x5c 0x0030c300 /* LED_CTRL3 */
-			0x7c 0x0000007e /* PORT0_STATUS */
-			>;
-	};
 };
 
 &eth0 {
 	status = "okay";
+};
 
-	/* default for ar934x, except for 1000M */
-	pll-data = <0x06000000 0x00000101 0x00001616>;
+&mdio1 {
+	status = "okay";
+};
 
-	nvmem-cells = <&macaddr_uboot_1fc00>;
-	nvmem-cell-names = "mac-address";
-
-	phy-mode = "rgmii";
-	phy-handle = <&phy0>;
+&eth1 {
+	status = "okay";
 };
 
 &uboot {
