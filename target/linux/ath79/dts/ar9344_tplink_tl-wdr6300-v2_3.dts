@@ -1,66 +1,114 @@
 // SPDX-License-Identifier: GPL-2.0-or-later OR MIT
 
-#include "ar9344_tplink_tl-wdrxxxx.dtsi"
+#include "ar9344.dtsi"
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
 
 / {
 	model = "TP-Link TL-WDR6300 v2_3";
 	compatible = "tplink,tl-wdr6300-v2_3", "qca,ar9344";
 
 	aliases {
-		label-mac-device = &ath9k;
+		label-mac-device = &ath10k;
+		led-boot = &led_system;
+		led-failsafe = &led_system;
+		led-running = &led_system;
+		led-upgrade = &led_system;
 	};
-};
 
-&leds {
-    lan1 {
-        label = "green:lan1";
-        gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
-    };
-    wan {
-        label = "green:wan";
-        gpios = <&gpio 11 GPIO_ACTIVE_LOW>;
-    };
-    /delete-node/ qss;
-};
+	leds: leds {
+		compatible = "gpio-leds";
 
-//&ath9k-leds{
-//    wlan5g {
-//        gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
-//    };
-//};
-&ath9k {
-	nvmem-cells = <&macaddr_uboot_1fc00>;
-	nvmem-cell-names = "mac-address";
-};
+		wlan2g {
+			label = "tp-link:green:wlan2g";
+			gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
+			linux,default-trigger = "phy0tpt";
+		};
+		wlan5g {
+			label = "tp-link:green:wlan5g";
+			gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
+			linux,default-trigger = "phy1tpt";
+		};
+		led_system: system {
+			label = "green:system";
+			gpios = <&gpio 14 GPIO_ACTIVE_LOW>;
+			default-state = "on";
+		};
+	};
 
-&wmac {
-	nvmem-cells = <&macaddr_uboot_1fc00>;
-	nvmem-cell-names = "mac-address";
-	mac-address-increment = <(-1)>;
-};
+	keys {
+		compatible = "gpio-keys";
 
-&mdio0 {
-	status = "okay";
+		reset {
+			linux,code = <KEY_RESTART>;
+			gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
+			debounce-interval = <60>;
+		};
+	};
 };
 
 &eth0 {
 	status = "okay";
-};
-
-&mdio1 {
-	status = "okay";
+    phy-mask = <4>;
 };
 
 &eth1 {
 	status = "okay";
 };
+&ref {
+	clock-frequency = <40000000>;
+};
+&gpio {
+    reg = <0x18040000 0x6c>;
+};
+&spi {
+	status = "okay";
 
-&uboot {
-	compatible = "nvmem-cells";
-	#address-cells = <1>;
-	#size-cells = <1>;
+	flash@0 {
+		compatible = "jedec,spi-nor";
+		reg = <0>;
+		spi-max-frequency = <33000000>;
 
-	macaddr_uboot_1fc00: macaddr@1fc00 {
-		reg = <0x1fc00 0x6>;
+		partitions {
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			uboot: partition@0 {
+				label = "u-boot";
+				reg = <0x000000 0x020000>;
+				read-only;
+			};
+
+			partition@20000 {
+				compatible = "tplink,firmware";
+				label = "firmware";
+				reg = <0x020000 0x7d0000>;
+			};
+
+			art: partition@ff0000 {
+				label = "art";
+				reg = <0xff0000 0x10000>;
+				read-only;
+			};
+		};
 	};
+};
+
+&pcie {
+	status = "okay";
+
+	ath10k: wifi@0,0 {
+		compatible = "qcom,ath10k";
+		reg = <0x0000 0 0 0 0>;
+		qca,no-eeprom;
+		#gpio-cells = <2>;
+		gpio-controller;
+	};
+};
+
+&wmac {
+	status = "okay";
+
+	mtd-cal-data = <&art 0x1000>;
 };
